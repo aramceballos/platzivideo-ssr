@@ -2,14 +2,23 @@ const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-module.exports = {
-  entry: [
-    './src/frontend/index.js',
+require('dotenv').config();
+
+const entry = ['./src/frontend/index.js'];
+
+const isDev = process.env.ENV === 'development';
+
+if (isDev) {
+  entry.push(
     'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=2000&reload=true',
-  ],
-  mode: 'development',
+  );
+}
+
+module.exports = {
+  entry,
+  mode: process.env.ENV,
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'src/server/public'),
     filename: 'assets/app.js',
     publicPath: '/',
   },
@@ -58,10 +67,9 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
-    port: 9090,
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    isDev ? new webpack.HotModuleReplacementPlugin() : () => {},
     new MiniCssExtractPlugin({
       filename: 'assets/app.css',
     }),
