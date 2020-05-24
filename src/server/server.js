@@ -15,7 +15,6 @@ import boom from '@hapi/boom';
 import passport from 'passport';
 import axios from 'axios';
 import reducer from '../frontend/reducers';
-import initialState from '../frontend/initialState';
 import serverRoutes from '../frontend/routes/serverRoutes';
 import getManifest from './getManifest';
 
@@ -81,12 +80,39 @@ const setResponse = (html, preloadedState, manifest) => {
 };
 
 const renderApp = (req, res) => {
+  let initialState;
+
+  const { id, name, email } = req.cookies;
+
+  if (id) {
+    initialState = {
+      user: {
+        id,
+        name,
+        email,
+      },
+      playing: {},
+      myList: [],
+      trends: [],
+      originals: [],
+    };
+  } else {
+    initialState = {
+      user: {},
+      playing: {},
+      myList: [],
+      trends: [],
+      originals: [],
+    };
+  }
+
   const store = createStore(reducer, initialState);
+  const isLogged = initialState.user.id;
   const preloadedState = store.getState();
   const html = renderToString(
     <Provider store={store}>
       <StaticRouter location={req.url} context={{}}>
-        {renderRoutes(serverRoutes)}
+        {renderRoutes(serverRoutes(isLogged))}
       </StaticRouter>
     </Provider>,
   );
