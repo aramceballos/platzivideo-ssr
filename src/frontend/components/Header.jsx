@@ -13,7 +13,12 @@ const Header = (props) => {
   const hasUser = Object.keys(user).length > 0;
 
   const handleLogout = () => {
+    document.cookie = 'email=';
+    document.cookie = 'name=';
+    document.cookie = 'id=';
+    document.cookie = 'token=';
     props.logoutRequest({});
+    window.location.href = '/login';
   };
   const headerClass = classNames('header', {
     isLogin,
@@ -26,25 +31,30 @@ const Header = (props) => {
       </Link>
       <div className='header__menu'>
         <div className='header__menu--profile'>
-          {hasUser ?
-            <img src={gravatar(user.email)} alt={user.email} /> :
+          {hasUser ? (
+            <img src={gravatar(user.email)} alt={user.email} />
+          ) : (
             <img src={userIcon} alt='' />
-          }
+          )}
           <p>Perfil</p>
         </div>
         <ul>
-          {hasUser ?
-            <li><a href='/'>{user.name}</a></li> :
-            null
-          }
-          {hasUser ?
-            <li><a href='#logout' onClick={handleLogout}>Cerrar Sesión</a></li> : (
-              <li>
-                <Link to='/login'>
-                  Iniciar sesión
-                </Link>
-              </li>
-            )}
+          {hasUser ? (
+            <li>
+              <a href='/'>{user.name}</a>
+            </li>
+          ) : null}
+          {hasUser ? (
+            <li>
+              <a href='#logout' onClick={handleLogout}>
+                Cerrar Sesión
+              </a>
+            </li>
+          ) : (
+            <li>
+              <Link to='/login'>Iniciar sesión</Link>
+            </li>
+          )}
         </ul>
       </div>
     </header>
