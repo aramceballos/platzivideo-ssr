@@ -64,3 +64,11 @@ export const loginUser = ({ email, password }, redirectUrl) => {
       .catch(error => console.log(error));
   };
 };
+
+export const addFavorite = (userMovie) => {
+  return (dispatch) => {
+    axios
+      .post('/user-movies', userMovie)
+      .catch(error => console.log(error));
+  };
+};
