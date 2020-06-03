@@ -65,8 +65,8 @@ typings/
 *.sublime-*
 
 # OSX
-.DS_Store
 .vscode
+.DS_Store
 
 # Docs Custom
 .cache/
